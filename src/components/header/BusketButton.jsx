@@ -3,8 +3,8 @@ import styled from "styled-components";
 import {ReactComponent as BusketIcon} from  '../../assets/icons/cart.svg'
 
 
-const BasketButton = ({count }) => {
-  return <StyledButton> <BusketIcon/><StyledTitle>Your cart</StyledTitle><StyledCounter id="counter">{count || 0}</StyledCounter></StyledButton>;
+const BasketButton = ({count,showModal }) => {
+  return <StyledButton onClick={showModal}> <BusketIcon/><StyledTitle>Your cart</StyledTitle><StyledCounter id="counter">{count || 0}</StyledCounter></StyledButton>;
 };
 
 export default BasketButton;

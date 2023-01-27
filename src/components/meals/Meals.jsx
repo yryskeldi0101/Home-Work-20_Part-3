@@ -32,8 +32,8 @@ const DUMMY_MEALS = [
 const Meals = () => {
     return (
             <Card>
-            {DUMMY_MEALS.map((meal) => {
-                return <MealItem  meal={meal}/>
+            {DUMMY_MEALS.map((meal,index) => {
+                return <MealItem key={index}  meal={meal}/>
             })}
             </Card>
        

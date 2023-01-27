@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import BasketButton from "./BusketButton";
 
-const Header = () => {
+const Header = ({showModal}) => {
   return (
     <Container>
       <Logo>ReactMeals</Logo>
-      <BasketButton> 7</BasketButton>
+      <BasketButton showModal={showModal}> 7</BasketButton>
 
     </Container>
   );

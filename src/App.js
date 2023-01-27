@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import './App.css';
 import Basket from './components/basket/Basket';
@@ -6,13 +7,19 @@ import Meals from './components/meals/Meals';
 import Summary from './components/summary/Summary';
 
 function App() {
+  const [showBasket,setShowBasket] = useState(false)
+
+  const showBasketHandler = () =>{
+    setShowBasket((prevState) => !prevState)
+  }
+
   return (
     <div className="App">
-      <Header/>
+      <Header showModal={showBasketHandler}/>
       <Content>
       <Summary/>
       <Meals/>
-      <Basket/>
+     {showBasket && <Basket onClose={showBasketHandler}/>}
       </Content>
     </div>
   );
