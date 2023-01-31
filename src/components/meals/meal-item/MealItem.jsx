@@ -1,10 +1,11 @@
-import React from 'react';
 import styled from 'styled-components';
 import MealItemForm from './MealItemForm';
 
 
 
 const MealItem = ({meal}) => {
+
+  
     return (
         <Container>
                     <StyledItemInfo>
@@ -12,7 +13,7 @@ const MealItem = ({meal}) => {
                         <p>{meal.description}</p>
                         <span>${meal.price}</span>
                     </StyledItemInfo>
-                    <MealItemForm/>
+                    <MealItemForm price ={meal.price} title={meal.title} id={meal._id}/>
                 </Container>
     );
 };

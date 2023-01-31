@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = ({children, variant='contained', borderStyle='rounded'}) => {
-  return <StyledButton borderStyle={borderStyle}  variant={variant}>{children}</StyledButton>;
+const Button = ({children, variant='contained', borderStyle='rounded',...restProps}) => {
+  return <StyledButton {...restProps} borderStyle={borderStyle}  variant={variant}>{children}</StyledButton>;
 };
 
 export default Button;
