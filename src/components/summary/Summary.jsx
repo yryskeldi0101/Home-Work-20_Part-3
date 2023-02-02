@@ -1,20 +1,27 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
 import styled from 'styled-components';
 import BackgroundImg from  '../../assets/images/summary-background.jpg'
+import { BasketContext } from '../../store/BasketContext';
+import Basket from '../basket/Basket';
 import SummaryInfoCard from './SummaryInfoCard';
 
 
 
 const Summary = () => {
+  const {showBasket} = useContext(BasketContext)
+
     return (
+        <>
+     {showBasket && <Basket/>}
         <Container>
             <StyledImg src={BackgroundImg} alt="" />
             <SummaryInfoCard/>
         </Container>
+        </>
     );
 };
 
-export default Summary;
+export default memo(Summary);
 
 
 const Container = styled.div`

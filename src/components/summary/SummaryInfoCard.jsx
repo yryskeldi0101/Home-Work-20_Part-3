@@ -1,8 +1,10 @@
-import React from "react";
+import React, { memo } from "react";
 import styled from 'styled-components';
 
 
 const SummaryInfoCard = () => {
+  console.log('SummaryInfoCard RENDER');
+
   return (
     <Card>  
       <StyledHeading>Delicious Food, Delivered To You</StyledHeading>
@@ -18,7 +20,7 @@ const SummaryInfoCard = () => {
   );
 };
 
-export default SummaryInfoCard;
+export default memo(SummaryInfoCard);
 
 const Card = styled.div`
   width: 53.375rem;

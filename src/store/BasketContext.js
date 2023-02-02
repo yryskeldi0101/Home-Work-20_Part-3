@@ -1,41 +1,47 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { fetchApi } from "../lib/fetchApi";
 
 export const BasketContext = createContext({
-    items: [],
-})
+  items: [],
+});
 
-export const BasketProvider = ({children}) =>{
-    const [items,setItems] = useState([])
+export const BasketProvider = ({ children }) => {
+  console.log("BasketProvider RENDER");
 
+  const [items, setItems] = useState([]);
 
-    const getBasket = async() =>{
-        try{
-       const {data} =  await fetchApi('basket')
-       setItems(data.items)
-        }catch(error){
-            console.log(error);
-        }
+  const getBasket = async () => {
+    console.log("getBasket RENDER");
+
+    try {
+      const { data } = await fetchApi("basket");
+      setItems(data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getBasket();
+  }, []);
+
+  const addToBasket = async (newItem) => {
+    console.log("AddToBasket RENDER");
+
+    try {
+      console.log(newItem);
+      const response = await fetchApi(`foods/${newItem.id}/addToBasket`, {
+        method: "POST",
+        body: { amount: newItem.amount },
+      });
+
+      setItems(response.data.items);
+    } catch (error) {
+      console.log(error);
     }
 
+    // getBasket()
 
-    useEffect(()=>{
-        getBasket()
-    },[])
-
-    const addToBasket = async(newItem) =>{
-        try{
-            console.log(newItem);
-        const response = await  fetchApi(`foods/${newItem.id}/addToBasket`,{method: 'POST', body: {amount: newItem.amount}}) 
-
-        setItems(response.data.items)
-        } catch(error){
-            console.log(error);
-        }
-
-        // getBasket()
-        
-        
     //     console.log(newItem);
     // setItems((prevState) => {
     //     if(!prevState.length){
@@ -57,73 +63,89 @@ export const BasketProvider = ({children}) =>{
     //     return updatedItems
     //     // return [...prevState,item]
     // })
+  };
+
+  const updateBasketItem = async ({ id, amount }) => {
+    console.log("UpdateBasketItem RENDER");
+    try {
+      const { data } = await fetchApi(`basketItem/${id}/update`, {
+        method: "PUT",
+        body: { amount },
+      });
+
+      setItems(data.items);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
+  const deleteBasketItem = async (id) => {
+    console.log("deleteBasketItem");
+    try {
+      const { data } = await fetchApi(`basketItem/${id}/delete`, {
+        method: "DELETE",
+      });
 
-    const updateBasketItem = async({id,amount}) => {
-        try{
-        const {data} = await  fetchApi(`basketItem/${id}/update`,{method: 'PUT', body: {amount}}) 
-
-        setItems(data.items)
-        } catch(error){
-            console.log(error);
-        }
+      setItems(data.items);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-    const deleteBasketItem = async(id) => {
-        try{
-        const {data} = await  fetchApi(`basketItem/${id}/delete`,{method: 'DELETE'}) 
+  // const incrementAmountHandler = (id) =>{
+  //     console.log(id);
+  //     const updatedItem = items.map((item) => {
+  //         if(item.id=== id){
+  //         return {...item, amount: ++ item.amount}
+  //         }
+  //         return item
+  //      })
+  //      return setItems(updatedItem)
+  // }
 
-        setItems(data.items)
-        } catch(error){
-            console.log(error);
-        }
-    }
+  // const decrementAmountHandler = (id,amount) =>{
+  //     console.log(id);
 
-    // const incrementAmountHandler = (id) =>{
-    //     console.log(id);
-    //     const updatedItem = items.map((item) => {
-    //         if(item.id=== id){
-    //         return {...item, amount: ++ item.amount}
-    //         }
-    //         return item
-    //      })
-    //      return setItems(updatedItem)
-    // }  
+  //     if(amount < 2){
+  //         console.log("filterItem");
+  //         const filteredItems = items.filter((item) => item.id !== id)
+  //         return setItems(filteredItems)
+  //    }
 
-    // const decrementAmountHandler = (id,amount) =>{
-    //     console.log(id);
+  //     const updatedItems = items.map((item) => {
 
-    //     if(amount < 2){
-    //         console.log("filterItem");
-    //         const filteredItems = items.filter((item) => item.id !== id) 
-    //         return setItems(filteredItems)
-    //    } 
-        
-        
-    //     const updatedItems = items.map((item) => {
+  //     if(amount <= 0){
+  //         return {...item, amount: item.amount}
+  //     }
 
-    //     if(amount <= 0){
-    //         return {...item, amount: item.amount}
-    //     }
+  //         if(item.id=== id){
+  //         return {...item, amount: --item.amount}
+  //         }
+  //         return item
+  //      })
+  //      return setItems(updatedItems)
+  // }
 
-    //         if(item.id=== id){
-    //         return {...item, amount: --item.amount}
-    //         }
-    //         return item
-    //      })
-    //      return setItems(updatedItems)
-    // }  
+  const [showBasket, setShowBasket] = useState(false);
 
-    const state = {
-        items,
-        addToBasket,
-        // incrementAmountHandler,
-        // decrementAmountHandler,
-        updateBasketItem,
-        deleteBasketItem
-    }
+  const showBasketHandler = useCallback(() => {
+    console.log("showBasketHandler RENDER");
 
+    setShowBasket((prevState) => !prevState);
+  }, []);
 
-    return <BasketContext.Provider value={state}>{children}</BasketContext.Provider>
-}
+  const state = {
+    items,
+    addToBasket,
+    // incrementAmountHandler,
+    // decrementAmountHandler,
+    updateBasketItem,
+    deleteBasketItem,
+    showBasket,
+    showBasketHandler,
+  };
+
+  return (
+    <BasketContext.Provider value={state}>{children}</BasketContext.Provider>
+  );
+};

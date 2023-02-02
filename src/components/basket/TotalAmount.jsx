@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
 import styled from 'styled-components';
+import { BasketContext } from '../../store/BasketContext';
 import Button from '../UI/Button';
 
-const TotalAmount = ({price, onClose ,onOrder}) => {
+const TotalAmount = ({price,onOrder}) => {
+  const { showBasketHandler} = useContext(BasketContext);
+    
 
     const orderButton = price > 0 ? <Button variant='contained' onClick={onOrder}>Order</Button> : null
     const fixedPrice = price.toFixed(2)
@@ -13,14 +16,14 @@ const TotalAmount = ({price, onClose ,onOrder}) => {
             <Price>${fixedPrice}</Price>
             </InfoContainer>
             <ActionButtonsContainer>
-                <Button variant='outlined' onClick={onClose}>Close</Button>
+                <Button variant='outlined' onClick={showBasketHandler}>Close</Button>
               {orderButton}
             </ActionButtonsContainer>
         </div>
     );
 };
 
-export default TotalAmount;
+export default memo(TotalAmount);
 
 
 const Label = styled.p`

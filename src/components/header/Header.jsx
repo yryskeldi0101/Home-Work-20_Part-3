@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { BasketContext } from "../../store/BasketContext";
 import BasketButton from "./BusketButton";
 
-const Header = ({showModal}) => {
+const Header = () => {
+
 
   const {items} = useContext(BasketContext)
 
@@ -13,7 +14,7 @@ const Header = ({showModal}) => {
     const sum = items.reduce((s,item) => {
       return s + item.amount
     }, 0)
-    console.log(sum);
+    // console.log(sum);
     return sum
   };
 
@@ -33,7 +34,7 @@ const Header = ({showModal}) => {
   return (
     <Container>
       <Logo>ReactMeals</Logo>
-      <BasketButton className={animationClass} showModal={showModal} count={calculateTotalAmount()}></BasketButton>
+      <BasketButton className={animationClass} count={calculateTotalAmount()}></BasketButton>
 
     </Container>
   );

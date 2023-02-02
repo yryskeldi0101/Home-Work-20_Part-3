@@ -1,26 +1,29 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import styled from 'styled-components';
 import './App.css';
-import Basket from './components/basket/Basket';
+// import Basket from './components/basket/Basket';
 import Header from './components/header/Header';
 import Meals from './components/meals/Meals';
 import Summary from './components/summary/Summary';
 import { BasketProvider } from './store/BasketContext';
 
 function App() {
-  const [showBasket,setShowBasket] = useState(false)
+  // console.log('App a');
+  // const [showBasket,setShowBasket] = useState(false)
 
-  const showBasketHandler = () =>{
-    setShowBasket((prevState) => !prevState)
-  }
+  // const showBasketHandler = () =>{
+  // console.log('showBasketPHandler RENDER');
+
+  //   setShowBasket((prevState) => !prevState)
+  // }
 
   return (
       <BasketProvider>
-      <Header showModal={showBasketHandler}/>
+      <Header/>
       <Content>
       <Summary/>
       <Meals/>
-     {showBasket && <Basket onClose={showBasketHandler}/>}
+     {/* {showBasket && <Basket onClose={showBasketHandler}/>} */}
       </Content>
       </BasketProvider>
   );

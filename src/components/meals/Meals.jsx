@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { fetchApi } from '../../lib/fetchApi';
 import MealItem from './meal-item/MealItem';
@@ -31,6 +31,8 @@ import MealItem from './meal-item/MealItem';
 // ]
 
 const Meals = () => {
+  console.log('Meals RENDER');
+
     const [meals,setMeals] = useState([])
     const [error,setError] = useState('')
     const [isLoading,setLoading] = useState(false)
@@ -40,16 +42,20 @@ const Meals = () => {
             setLoading(true)
        const response =  await fetchApi('foods')
        console.log(response.data);
+
        setMeals(response.data)
+       
         }catch(error){
             console.log(error);
             setError("failed to Load meals")
         }
         setLoading(false)
     }
+
     useEffect(() =>{   
         getMeals()  
     },[])
+
     return (
         <Card >
             {isLoading && !error && <p>LOADING........</p>}
@@ -62,7 +68,7 @@ const Meals = () => {
     );
 };
 
-export default Meals;
+export default memo(Meals);
 
 const Card = styled.div`
 background: #FFFFFF;

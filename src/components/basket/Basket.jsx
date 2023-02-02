@@ -1,31 +1,37 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import styled from "styled-components";
 import { BasketContext } from "../../store/BasketContext";
 import Modal from "../UI/Modal";
 import BasketItem from "./BasketItem";
 import TotalAmount from "./TotalAmount";
 
-const Basket = ({ onClose }) => {
-  const { items, updateBasketItem ,deleteBasketItem } = useContext(BasketContext);
+const Basket = () => {
+  
+  console.log('Basket RENDER');
+  const { items, updateBasketItem ,deleteBasketItem,} = useContext(BasketContext);
 
-  const decrementAmount = (id,amount) => {
-    if (amount > 1) {
-      updateBasketItem({ amount: amount - 1, id: id });
-    } else{
-        deleteBasketItem(id)
-    }
-  };
+  const decrementAmount = useCallback((id,amount) => {
+    console.log('decrementAmount RENDER', amount)
+  
+      if (amount > 1) {
+        updateBasketItem({ amount: amount - 1, id: id });
+      } else{
+          deleteBasketItem(id)
+      }
+    },[deleteBasketItem,updateBasketItem]) 
 
-  const incrementAmount = (id,amount) => {
-    updateBasketItem({amount: amount + 1, id: id});
-  };
+  const incrementAmount = useCallback((id,amount) => {
+    console.log('decrementAmount RENDER', amount);
+      updateBasketItem({amount: amount + 1, id: id});
+    },[updateBasketItem]) 
 
-  const getTotalPrice = () => {
-    return items.reduce((sum, { price, amount }) => sum + price * amount, 0);
-  };
+  const getTotalPrice = useCallback( () => {
+    console.log('getTotalPrice RENDER');
+      return items.reduce((sum, { price, amount }) => sum + price * amount, 0);
+    },[items])
 
   return (
-    <Modal onClose={onClose}>
+    <Modal>
       <Content>
         {items.length ? (
           <FixedHeightContainer>
@@ -47,7 +53,6 @@ const Basket = ({ onClose }) => {
 
         <TotalAmount
           price={getTotalPrice()}
-          onClose={onClose}
           onOrder={() => {}}
         />
       </Content>

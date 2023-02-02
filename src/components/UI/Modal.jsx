@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { memo, useContext } from 'react';
 import styled from 'styled-components';
 import { createPortal } from 'react-dom';
+import { BasketContext } from '../../store/BasketContext';
 
 
 
@@ -15,8 +16,9 @@ const StyledBackdrop= styled.div`
 
 `
 
-const Backdrop = ({onClose}) =>{
-    return <StyledBackdrop onClick={onClose}/>
+const Backdrop = () =>{
+  const { showBasketHandler} = useContext(BasketContext);
+    return <StyledBackdrop onClick={showBasketHandler}/>
 }
 
 
@@ -51,21 +53,23 @@ const StyledModalContent= styled.div`
 `
 
 const ModalContent = ({children}) =>{
+  console.log('Modal RENDER');
+
     return <StyledModalContent>{children}</StyledModalContent>
 }
 
     const backdropRoot = document.getElementById("backdrop")
     const modalOverlayRoot = document.getElementById("modal-overlay")
 
-const Modal = ({children,onClose}) => {
+const Modal = ({children}) => {
     return (
         <div>
             <>
-          {createPortal(<Backdrop onClose={onClose}/>, backdropRoot )}
+          {createPortal(<Backdrop />, backdropRoot )}
             {createPortal(<ModalContent>{children}</ModalContent>, modalOverlayRoot)}
             </>
         </div>
     );
 };
 
-export default Modal;
+export default memo(Modal);

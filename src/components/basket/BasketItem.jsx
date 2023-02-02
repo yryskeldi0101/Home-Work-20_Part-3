@@ -1,7 +1,10 @@
+import { memo } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 
 const BasketItem = ({title,price,amount,decrementAmount,incrementAmount}) => {
+  console.log('BasketItem RENDER');
+
 
 
     return (
@@ -22,7 +25,7 @@ const BasketItem = ({title,price,amount,decrementAmount,incrementAmount}) => {
     );
 };
 
-export default BasketItem;
+export default memo(BasketItem);
 
 
 const Container = styled.div`
