@@ -1,69 +1,70 @@
-import React, { useContext, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { BasketContext } from "../../store/BasketContext";
+import { getBasket } from "../../store/meals/BasketReducer";
+
 import BasketButton from "./BusketButton";
 
-const Header = () => {
+const Header = ({ onShowBasket }) => {
+  const dispatch = useDispatch()
+  const items = useSelector((state)=> state.basket.items)
+  const [animationClass, setAnimationClass] = useState("");
 
 
-  const {items} = useContext(BasketContext)
-
-  const [animationClass, setAnimationClass] = useState('')
-
-  const calculateTotalAmount = () =>{
-    const sum = items.reduce((s,item) => {
-      return s + item.amount
-    }, 0)
-    // console.log(sum);
-    return sum
-  };
-
-  useEffect(()=> {
-    setAnimationClass('bump')
+  useEffect(()=>{
+dispatch(getBasket())
+  },[dispatch])
+  
+  const calculateTotalAmount = useCallback(() => {
+    const sum = items.reduce((s, item) => {
+      return s + item.amount;
+    }, 0);
+    return sum;
+  }, [items]);
+  useEffect(() => {
+    setAnimationClass("bump");
 
     const id = setTimeout(() => {
-      setAnimationClass('')
-    }, 300);
+      setAnimationClass("");
 
-    return () => {
-      clearTimeout(id)
-    }
-  },[items])
-
-
+      return () => {
+        clearTimeout(id);
+      };
+    }, 600);
+  }, [items]);
   return (
     <Container>
       <Logo>ReactMeals</Logo>
-      <BasketButton className={animationClass} count={calculateTotalAmount()}></BasketButton>
-
+      <BasketButton
+        onClick={onShowBasket}
+        className={animationClass}
+        count={calculateTotalAmount()}
+      ></BasketButton>
     </Container>
   );
 };
 
-export default Header;
+export default memo(Header);
 
-const Container = styled.header`
-position: fixed;
-top: 0;
-  height: 101px;
-  background-color: #8a2b06;
+const Container = styled.div`
   width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  height: 101px;
+  background-color: rgb(138, 43, 6);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-left: 120px;
   padding-right: 120px;
-  align-items: center;
-  z-index: 100;
-
-  
 `;
 
 const Logo = styled.p`
+  margin: 0;
   font-weight: 600;
   font-size: 38px;
   line-height: 57px;
-  color: white;
-  margin: 0;
+  color: #ffffff;
+  font-family: Poppins, sans-serif;
 `;
-
-

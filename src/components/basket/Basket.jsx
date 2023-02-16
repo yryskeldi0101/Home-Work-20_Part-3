@@ -1,74 +1,72 @@
-import React, { useCallback, useContext } from "react";
+import { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { BasketContext } from "../../store/BasketContext";
-import Modal from "../UI/Modal";
+import { deleteBasketItem, updateBasketItem } from "../../store/meals/BasketReducer";
+
+import Modal from "../UI/Modal"
 import BasketItem from "./BasketItem";
 import TotalAmount from "./TotalAmount";
 
-const Basket = () => {
-  
-  console.log('Basket RENDER');
-  const { items, updateBasketItem ,deleteBasketItem,} = useContext(BasketContext);
-
-  const decrementAmount = useCallback((id,amount) => {
-    console.log('decrementAmount RENDER', amount)
-  
+const Basket = ({ onClose }) => {
+  const items = useSelector((state) => state.basket.items);
+  const dispatch = useDispatch();
+  const dec = useCallback(
+    (id, amount) => {
       if (amount > 1) {
-        updateBasketItem({ amount: amount - 1, id: id });
-      } else{
-          deleteBasketItem(id)
+        dispatch(updateBasketItem({ amount: amount - 1, id: id }));
+      } else {
+        dispatch(deleteBasketItem(id));
       }
-    },[deleteBasketItem,updateBasketItem]) 
+    },
+    [dispatch]
+  );
 
-  const incrementAmount = useCallback((id,amount) => {
-    console.log('decrementAmount RENDER', amount);
-      updateBasketItem({amount: amount + 1, id: id});
-    },[updateBasketItem]) 
+  const incrementAmount = useCallback(
+    (id, amount) => {
+      dispatch(updateBasketItem({ amount: amount + 1, id: id }));
+    },
+    [dispatch]
+  );
 
-  const getTotalPrice = useCallback( () => {
-    console.log('getTotalPrice RENDER');
-      return items.reduce((sum, { price, amount }) => sum + price * amount, 0);
-    },[items])
-
+  const getTotalPrice = useCallback(() => {
+    return items.reduce((sum, { price, amount }) => (sum += price * amount), 0);
+  }, [items]);
   return (
-    <Modal>
-      <Content>
-        {items.length ? (
-          <FixedHeightContainer>
-            {items.map((item, index) => {
-              return (
-                <BasketItem
-                  key={index}
-                  id={item._id}
-                  title={item.title}
-                  price={item.price}
-                  amount={item.amount}
-                  incrementAmount={() => incrementAmount(item._id,item.amount)}
-                  decrementAmount={() => decrementAmount(item._id,item.amount)}
-                />
-              );
-            })}
-          </FixedHeightContainer>
-        ) : null}
+    <Modal onClose={onClose}>
+      <StyledTotalContainer>
+        <FiwedHeightContainer>
+          {items.map((item) => {
+            return (
+              <BasketItem
+                key={item._id}
+                incrementAmount={() => incrementAmount(item._id, item.amount)}
+                dec={() => dec(item._id, item.amount)}
+                title={item.title}
+                price={item.price}
+                amount={item.amount}
+              />
+            );
+          })}
+        </FiwedHeightContainer>
 
-        <TotalAmount
+        <TotalAmount 
           price={getTotalPrice()}
+          onClose={onClose}
           onOrder={() => {}}
         />
-      </Content>
+      </StyledTotalContainer>
     </Modal>
   );
 };
 
 export default Basket;
 
-const Content = styled.div`
+const StyledTotalContainer = styled.div`
   width: 100%;
   height: 100%;
   padding: 1.5rem 1rem;
 `;
-
-const FixedHeightContainer = styled.div`
+const FiwedHeightContainer = styled.div`
   max-height: 228px;
   overflow-y: scroll;
 `;

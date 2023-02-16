@@ -1,53 +1,66 @@
-// import { useState } from 'react';
-import styled from 'styled-components';
-import './App.css';
-// import Basket from './components/basket/Basket';
-import Header from './components/header/Header';
-import Meals from './components/meals/Meals';
-import Summary from './components/summary/Summary';
-import { BasketProvider } from './store/BasketContext';
+import { useCallback, useState } from "react";
+import "./App.css";
+import Basket from "./components/basket/Basket";
+import Header from "./components/header/Header";
+import Meals from "./components/meals/Meals";
+import Summary from "./components/summary/Summary";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
-function App() {
-  // console.log('App a');
-  // const [showBasket,setShowBasket] = useState(false)
+import styled from "styled-components";
+import { useFoods } from "./components/hooks/useFoods";
+function AppContent() {
+  const [isBasketVisible, setBasketVisible] = useState(false);
 
-  // const showBasketHandler = () =>{
-  // console.log('showBasketPHandler RENDER');
-
-  //   setShowBasket((prevState) => !prevState)
-  // }
-
+  const { sortDirection, changesetSortDirection, meals, isLoading, error } =useFoods();
+  const showBasketHnadler = useCallback(() => {
+    setBasketVisible((prevState) => !prevState);
+  }, []);
   return (
-      <BasketProvider>
-      <Header/>
+    <Provider store={store}>
+      <Header onShowBasket={showBasketHnadler} />
+
+      <Summary />
       <Content>
-      <Summary/>
-      <Meals/>
-     {/* {showBasket && <Basket onClose={showBasketHandler}/>} */}
+        <select
+          onChange={(e) => changesetSortDirection(e.target.value)}
+          value={sortDirection}
+        >
+          <option value="ASC">cheaper</option>
+          <option value="DESC">more expensive</option>
+        </select>
       </Content>
-      </BasketProvider>
+      <Meals meals={meals} isLoading={isLoading} error={error} />
+      {isBasketVisible && <Basket onClose={showBasketHnadler} />}
+    </Provider>
   );
 }
 
-export default App;
+const App = () => {
+  return (
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
+  );
+};
 
+
+export default App
 
 const Content = styled.div`
-margin-top: 101px ;
+  margin-top: 101px;
 `
 
+// GET /foods
 
-/*
-GET /foods
-
-GET /basket
-Headers: {UserID: 'nurbolot'}
-
-POST /foods/:foodId/addToBasket
-BODY: { amount: number }
-
-DELETE /basketItem/:id/delete
-
-PUT /basketItem/:id/update
-BODY: { amount: number }
-*/
+// Headers: { UserID: "your_name"  }
+// GET /basket
+// Headers: { UserID: "your_name"  }
+// POST /foods/:foodId/addToBasket
+// BODY: { amount: number }
+// Headers: { UserID: "your_name"  }
+// DELETE /basketItem/:id/delete
+// Headers: { UserID: "your_name"  }
+// PUT /basketItem/:id/update
+// BODY: { amount: number }
+// Headers: { UserID: "your_name"  }

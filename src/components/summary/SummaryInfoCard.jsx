@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 
 const SummaryInfoCard = () => {
-  console.log('SummaryInfoCard RENDER');
-
   return (
     <Card>  
       <StyledHeading>Delicious Food, Delivered To You</StyledHeading>

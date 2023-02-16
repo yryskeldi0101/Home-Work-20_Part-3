@@ -31,7 +31,6 @@ import MealItem from './meal-item/MealItem';
 // ]
 
 const Meals = () => {
-  console.log('Meals RENDER');
 
     const [meals,setMeals] = useState([])
     const [error,setError] = useState('')

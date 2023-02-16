@@ -6,12 +6,12 @@ export const BasketContext = createContext({
 });
 
 export const BasketProvider = ({ children }) => {
-  console.log("BasketProvider RENDER");
+
 
   const [items, setItems] = useState([]);
 
   const getBasket = async () => {
-    console.log("getBasket RENDER");
+
 
     try {
       const { data } = await fetchApi("basket");
@@ -26,7 +26,7 @@ export const BasketProvider = ({ children }) => {
   }, []);
 
   const addToBasket = async (newItem) => {
-    console.log("AddToBasket RENDER");
+ 
 
     try {
       console.log(newItem);
@@ -66,7 +66,7 @@ export const BasketProvider = ({ children }) => {
   };
 
   const updateBasketItem = async ({ id, amount }) => {
-    console.log("UpdateBasketItem RENDER");
+
     try {
       const { data } = await fetchApi(`basketItem/${id}/update`, {
         method: "PUT",
@@ -80,7 +80,7 @@ export const BasketProvider = ({ children }) => {
   };
 
   const deleteBasketItem = async (id) => {
-    console.log("deleteBasketItem");
+
     try {
       const { data } = await fetchApi(`basketItem/${id}/delete`, {
         method: "DELETE",
@@ -129,7 +129,6 @@ export const BasketProvider = ({ children }) => {
   const [showBasket, setShowBasket] = useState(false);
 
   const showBasketHandler = useCallback(() => {
-    console.log("showBasketHandler RENDER");
 
     setShowBasket((prevState) => !prevState);
   }, []);

@@ -1,14 +1,13 @@
-import React, { memo, useContext, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as PlusIcon } from "../../../assets/icons/plus-icon.svg";
-import { BasketContext } from "../../../store/BasketContext";
 import Button from "../../UI/Button";
+import { useState } from "react";
+import { ReactComponent as PlusIcon } from "../../../assets/icons/plus-icon.svg";
+import { useDispatch } from "react-redux";
+import { addToBasket } from "../../../store/meals/BasketReducer";
 
-const MealItemForm = ({ id, title, price }) => {
-  console.log("MealItemForm RENDER");
 
-  const { addToBasket } = useContext(BasketContext);
-
+const MealItemForm = ({ id, price,title }) => {
+ const dispatch= useDispatch()
   const [amount, setAmount] = useState(1);
 
   const amountChangeHandler = (event) => {
@@ -17,36 +16,39 @@ const MealItemForm = ({ id, title, price }) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+
     const basketItem = {
       id,
-      title,
       price,
-      amount,
+      title,
+      amount
     };
-    addToBasket(basketItem);
-    setAmount(1);
+    dispatch(addToBasket(basketItem))
   };
-
   return (
-    <StyledForm onSubmit={submitHandler} action="">
+    <StyledForm onSubmit={submitHandler}>
       <Container>
-        <label htmlFor="amount">Amount</label>
+        <label htmlFor={id}>Amount</label>
         <input
-          onChange={amountChangeHandler}
           value={amount}
-          id="amount"
-          min={1}
+          onChange={amountChangeHandler}
           type="number"
+          id={id}
+          min={1}
+          max={5}
+          defaultChecked={1}
         />
       </Container>
       <Button>
-        <PlusIcon /> Add
+        <StyledIcon />
+        Add
       </Button>
     </StyledForm>
   );
 };
 
-export default memo(MealItemForm);
+export default MealItemForm;
+
 
 const Container = styled.div`
   margin-bottom: 10px;
@@ -74,4 +76,8 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+`;
+
+const StyledIcon = styled(PlusIcon)`
+  margin-right: 10px;
 `;

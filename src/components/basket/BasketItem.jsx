@@ -2,9 +2,7 @@ import { memo } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 
-const BasketItem = ({title,price,amount,decrementAmount,incrementAmount}) => {
-  console.log('BasketItem RENDER');
-
+const BasketItem = ({title,price,amount,dec,incrementAmount}) => {
 
 
     return (
@@ -16,7 +14,7 @@ const BasketItem = ({title,price,amount,decrementAmount,incrementAmount}) => {
                     <Amount>x{amount}</Amount>
                 </PriceAndAmount>
                 <CounterContainer>
-                    <Button onClick={decrementAmount} borderStyle='squared' variant='outlined'>-</Button>
+                    <Button onClick={dec} borderStyle='squared' variant='outlined'>-</Button>
                     <Button onClick={incrementAmount} borderStyle='squared' variant='outlined'>+</Button>
                 </CounterContainer>
             </Content>

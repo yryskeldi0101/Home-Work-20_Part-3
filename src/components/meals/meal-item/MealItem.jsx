@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MealItemForm from "./MealItemForm";
 
 const MealItem = ({ meal }) => {
-  console.log("MealItem RENDER");
+
 
   return (
     <Container>
