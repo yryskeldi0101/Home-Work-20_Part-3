@@ -11,8 +11,6 @@ export const BasketProvider = ({ children }) => {
   const [items, setItems] = useState([]);
 
   const getBasket = async () => {
-
-
     try {
       const { data } = await fetchApi("basket");
       setItems(data.items);
@@ -26,8 +24,6 @@ export const BasketProvider = ({ children }) => {
   }, []);
 
   const addToBasket = async (newItem) => {
- 
-
     try {
       console.log(newItem);
       const response = await fetchApi(`foods/${newItem.id}/addToBasket`, {
@@ -66,7 +62,6 @@ export const BasketProvider = ({ children }) => {
   };
 
   const updateBasketItem = async ({ id, amount }) => {
-
     try {
       const { data } = await fetchApi(`basketItem/${id}/update`, {
         method: "PUT",

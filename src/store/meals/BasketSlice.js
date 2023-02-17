@@ -8,25 +8,108 @@ export const basketActionTypes = {
 
 const initialState = {
   items: [],
-  error: ''
+  error: "",
+  isLoading: false,
 };
 
-
 export const basketSlice = createSlice({
-  name: 'basket',
+  name: "basket",
   initialState,
   reducers: {
-    getBasketSuccess(state,action){
-      state.items = action.payload
-    }
+    getBasketSuccess(state, action) {
+      state.items = action.payload;
+    },
   },
-  extraReducers:(builder) => {
-    builder.addCase(addToBasket.rejected, (state,action) => {
-      state.error = action.payload
-    })
-    // builder.addCase(updateBasketItem.,)
+  extraReducers: (builder) => {
+    builder.addCase(addToBasket.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(updateBasketItem.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    builder.addCase(deleteBasketItem.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+
+    builder.addCase(getBasket.fulfilled, (state, action) => {
+      state.items = action.payload;
+      state.isLoading = false;
+      state.error = "";
+    });
+
+    builder.addCase(getBasket.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(getBasket.rejected, (state, action) => {
+      state.items = action.payload;
+      state.isLoading = false;
+    });
+  },
+});
+
+
+export const basketActions = basketSlice.actions;
+
+export const getBasket = createAsyncThunk(
+  "basket/getBasket",
+  async (_, {rejectWithValue }) => {
+    try {
+      const { data } = await fetchApi("basket");
+      return data.items;
+      // dispatch(basketActions.getBasketSuccess(data.items));
+    } catch (error) {
+      return rejectWithValue("Something went wrong");
+    }
   }
-})
+);
+
+export const addToBasket = createAsyncThunk(
+  "basket/addToBasket",
+  async (newItem, { dispatch, rejectWithValue }) => {
+    try {
+      await fetchApi(`foods/${newItem.id}/addToBasket`, {
+        method: "POST",
+        body: { amount: newItem.amount },
+      });
+      dispatch(getBasket());
+    } catch (error) {
+      return rejectWithValue("Something went wrong");
+    }
+  }
+);
+
+export const updateBasketItem = createAsyncThunk(
+  "basket/updateBasketItem",
+  async ({ id, amount }, { dispatch, rejectWithValue }) => {
+    try {
+      await fetchApi(`basketitem/${id}/update`, {
+        method: "PUT",
+        body: { amount },
+      });
+      dispatch(getBasket());
+    } catch (error) {
+      return rejectWithValue("Something went wrong");
+    }
+  }
+);
+
+export const deleteBasketItem = createAsyncThunk(
+  "basket/deleteBasketItem",
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      await fetchApi(`basketitem/${id}/delete`, {
+        method: "DELETE",
+      });
+
+      dispatch(getBasket());
+    } catch (error) {
+      rejectWithValue("Something went wrong");
+    }
+  }
+);
+
+
 // export const BasketReducer = (state = initialState, action) => {
 //   switch (action.type) {
 //     case basketActionTypes.GET_BASKET_SUCCESS:
@@ -40,16 +123,6 @@ export const basketSlice = createSlice({
 //   }
 // };
 
-export const basketActions = basketSlice.actions
-
-export const getBasket = createAsyncThunk('basket/addToBasket',async(_,{dispatch,rejectWithValue}) =>{
-  try {
-    const { data } = await fetchApi("basket");
-    dispatch(basketActions.getBasketSuccess(data.items));
-  } catch (error) {
-    return rejectWithValue("Something went wrong")
-  }
-})
 
 
 // export const getBasket = () => async (dispatch) => {
@@ -60,50 +133,6 @@ export const getBasket = createAsyncThunk('basket/addToBasket',async(_,{dispatch
 //     console.log(error);
 //   }
 // };
-
-
-export const addToBasket = createAsyncThunk('basket/addToBasket',async(newItem,{dispatch,rejectWithValue}) =>{
-  try {
-    await fetchApi(`foods/${newItem.id}/addToBasket`, {
-      method: "POST",
-      body: { amount: newItem.amount },
-    });
-    dispatch(getBasket());
-  } catch (error) {
-    return rejectWithValue("Something went wrong")
-  }
-})
-
-
-export const updateBasketItem = createAsyncThunk('basket/updateBasketItem',async({id,amount},{dispatch,rejectWithValue}) =>{
-  try {
-    await fetchApi(`basketitem/${id}/update`, {
-   method: "PUT",
-   body: { amount },
- });
- dispatch(getBasket())
-} catch (error) {
-   return rejectWithValue("Something went wrong")
-}
-})
-
-
-
-export const deleteBasketItem = createAsyncThunk('basket/deleteBasketItem',async(id,{dispatch,rejectWithValue}) =>{
-  try {
-    await fetchApi(`basketitem/${id}/delete`, {
-     method: "DELETE",
-   });
-
-   dispatch(getBasket())
- } catch (error) {
-   rejectWithValue('Something went wrong')
- }
-})
-
-
-
-
 
 // export const addToBasket = (newItem) => async (dispatch) => {
 //   try {
@@ -117,7 +146,6 @@ export const deleteBasketItem = createAsyncThunk('basket/deleteBasketItem',async
 //   }
 // };
 
- 
 //  export const updateBasketItem = ({ id, amount }) => async (dispatch ) => {
 //     try {
 //          await fetchApi(`basketitem/${id}/update`, {
@@ -130,14 +158,14 @@ export const deleteBasketItem = createAsyncThunk('basket/deleteBasketItem',async
 //     }
 //   };
 
-  // export const deleteBasketItem = (id)=>async (dispatch) => {
-  //   try {
-  //      await fetchApi(`basketitem/${id}/delete`, {
-  //       method: "DELETE",
-  //     });
-    
-  //     dispatch(getBasket())
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+// export const deleteBasketItem = (id)=>async (dispatch) => {
+//   try {
+//      await fetchApi(`basketitem/${id}/delete`, {
+//       method: "DELETE",
+//     });
+
+//     dispatch(getBasket())
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
