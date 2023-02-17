@@ -1,7 +1,7 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getBasket } from "../../store/meals/BasketReducer";
+import { getBasket } from "../../store/meals/BasketSlice";
 
 import BasketButton from "./BusketButton";
 

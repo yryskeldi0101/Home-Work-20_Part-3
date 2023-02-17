@@ -3,7 +3,7 @@ import Button from "../../UI/Button";
 import { useState } from "react";
 import { ReactComponent as PlusIcon } from "../../../assets/icons/plus-icon.svg";
 import { useDispatch } from "react-redux";
-import { addToBasket } from "../../../store/meals/BasketReducer";
+import { addToBasket } from "../../../store/meals/BasketSlice";
 
 
 const MealItemForm = ({ id, price,title }) => {
