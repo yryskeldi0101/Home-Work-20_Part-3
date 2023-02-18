@@ -51,16 +51,3 @@ const Content = styled.div`
   margin-top: 101px;
 `
 
-// GET /foods
-
-// Headers: { UserID: "your_name"  }
-// GET /basket
-// Headers: { UserID: "your_name"  }
-// POST /foods/:foodId/addToBasket
-// BODY: { amount: number }
-// Headers: { UserID: "your_name"  }
-// DELETE /basketItem/:id/delete
-// Headers: { UserID: "your_name"  }
-// PUT /basketItem/:id/update
-// BODY: { amount: number }
-// Headers: { UserID: "your_name"  }
